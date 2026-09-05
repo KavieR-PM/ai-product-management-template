@@ -1,21 +1,16 @@
-# Lovable Prototype · Juno
-
-> Module 1 · Prompting. The clickable Lovable prototype that brings the system prompt to life.
+# Prototype · Juno
 
 ## Prototype link
 
-_The public Lovable share URL._
-
-_____
+https://claude.ai/code/artifact/068f5ea8-09bf-49e0-91b9-4aea23d62ee3
 
 ## What it demonstrates
 
-_The one flow this prototype proves._
-
-_____
+The one flow this prototype proves is that
 
 ## Debrief
 
-- **What worked:** _____
-- **What broke / felt like a toy:** _____
-- **What I'd change next pass:** _____
+- **What worked:** The generation of the structured insights and the deployment of the redesigning of the dashboard
+- **What broke / felt like a toy:** Generation of the insights between tools were different.
+- **What I'd change next pass:** I would take the prompt one step further to get valuable insights
+
