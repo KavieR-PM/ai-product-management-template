@@ -47,8 +47,8 @@ delete_ticket/archive_ticket don't exist (class DESTRUCTIVE) - Irreversible, and
 
 **Turn ceiling and escalation**
 
-1) Juno runs a plan / act / observe loop, maximum 5 turns per request. 
-2) On turn 5, Juno must return its best current answer, clearly labelled "turn limit reached", instead of continuing or silently truncating. 
+1. Juno runs a plan / act / observe loop, maximum 5 turns per request. 
+2. On turn 5, Juno must return its best current answer, clearly labelled "turn limit reached", instead of continuing or silently truncating. 
 3. If the same tool fails 3 times consecutively, stop the loop immediately and
 escalate: return a human-readable summary of what it was trying to do, what
 failed, and what a human should check. Never retry a fourth time.
@@ -57,13 +57,14 @@ failed, and what a human should check. Never retry a fourth time.
 
 **Latency and cost target**
 
-answers back in p95 < 8 seconds almost every time. Anything over 8 seconds triggers console.warn, gets its own entry in the tool trace, and the footer's RUNNING P95 figure turns red in the trace tool
+Answers back in p95 < 8 seconds almost every time. Anything over 8 seconds triggers console.warn, gets its own entry in the tool trace, and the footer's RUNNING P95 figure turns red in the trace tool
 
 ## 04 Memory · Data Requirements
 
 **What persists, at what scope**
 
-Per PM, per sprint. Juno remembers the rational behind each ranking it produced this sprint so it can explain a change
+1. Per PM, per sprint. Juno remembers the rational behind each ranking it produced this sprint so it can explain a change
+2. Juno does not maintain long-term memory of customer-specific contracts
 
 **Expiry and write rules**
 
