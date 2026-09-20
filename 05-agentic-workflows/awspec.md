@@ -4,13 +4,19 @@
 
 ## Goal
 
-Triage P0 escalations into a daily prioritised top-3 risk list, with a strategic-rationale citation per item (Risk mitigation).
+Triage prioritized P-level list daily into the structured insights list, with a strategic-rationale citation per item which feeds into a draft PRD. 
 
 **Primary actor:** Agent + Human-in-the-loop
 
 ## Trigger
 
 New message in #escalations tagged P0 AND thread length >= 5 messages within 10 minutes.
+New message in #escalations tagged P1 AND thread length >= 5 messages within 10 minutes
+New message in #escalations tagged P2 AND thread length >= 5 messages within 20 minutes
+New message in #escalations tagged P3 AND thread length >= 5 messages within 30 minutes
+
+
+
 
 ## Steps & tools
 
@@ -18,33 +24,38 @@ New message in #escalations tagged P0 AND thread length >= 5 messages within 10 
 
 | Step | Action | Tool / model | Guardrail |
 |---|---|---|---|
-| 1 | Read the thread + retrieve customer ID and ARR if mentioned. | slack.read_thread(id), read-only | Agent can READ Slack #escalations + Strategy KB + Salesforce ARR. Agent can WRITE to #pm-daily and create Jira stubs. Agent CANNOT edit Salesforce records, edit Jira tickets after creation, or post outside #pm-daily. |
-| 2 | RAG retrieval over the RocketShip Strategy One-Pager (M3 KB), top-K = 6. | corpus.retrieve(query, k=6), read-only |  |
-| 3 | Score risk + alignment vs strategic pillars; emit P0-P3 with rationale. | salesforce.lookup_arr(customer_id), read-only |  |
-| 4 | Draft summary card (transcript quote + strategic citation). | jira.create_stub(payload), write, requires confidence >= 80% |  |
-| 5 | Post to #pm-daily OR route to PM review based on confidence threshold. | slack.post(channel, payload), write, restricted to #pm-daily |  |
+| 1 | Read the tickets (Jira + Support) and Slack threads and retrieve customer ID and Application ID  if mentioned. | APIs: | Agent can READ Slack #escalations + Strategy KB + JIRA tickets. Agent can WRITE to structured insights and Draft PRD. Agent CANNOT edit write or edit tickets, strategy documents, access user accounts/permissions, evaluation scores.  |
+| 2 | RAG retrieval over the RocketShip Strategy One-Pager (M3 KB), top-K = 6. | search_strategy(), read-only - retrieve and parse the strategy document that it queries against |  |
+| 3 | Score risk + alignment vs strategic pillars; emit P0-P3 with rationale. | read_tickets(), read-only - fetch tickets for correlation |  |
+| 4 | Create Structured insights (transcript quote) and Draft PRD cards (problem statement + evidence). | write_roadmap, write-only - commit decisions to a persistent backlog |  |
+| 5 | PM review based on confidence threshold. | Internal databases: |  |
+| 6 | _ | Juno Session & Request Store - Store transcript uploads, request state and tool trace logs |  |
+| 7 | _ | Insight Store - Persist all synthesized insights (seeded and refined) and their metadata |  |
+| 8 | _ | Tool trace log - Audit trail of every tool call, result, and guardrail check |  |
+| 9 | _ | Strategy Document Index - fast lookups without re-parsing every time |  |
+| 10 | _ | Evaluation and Metrics Store - Log weekly human evaluation scores and track guardrail health |  |
 
 **Schemas**
 
-- corpus.retrieve → {chunks:[{text,source,pillar,score}]}.
-- salesforce.lookup_arr → {arr_usd, contract_end, churn_risk}.
-- jira.create_stub → {ticket_id, url, status}.
+- search_strategy -> {doc_id}
+- read_tickets -> [id, title, description, status, priority, created, updated, assignee {id, name, email}]
+- write_roadmap -> {id, title, priority, source, status, insight_id, strategy_clause, evidence_quote, created_by, approved_by}
 
 **Memory (in or out of scope)**
 
 - **Episodic:** In-scope, tool results, retrieved chunks, intermediate scores. Lifetime: end of run.
 - **Semantic:** In-scope, RocketShip strategic taxonomy + Juno system prompt + PM preferences. Lifetime: indefinite, refreshed weekly. Out of scope, do NOT persist customer-specific contracts or PII.
-- **Working:** In-scope, current thread, customer ID, ARR, retrieved KB chunks, current confidence score. Held in working context only.
-- **External:** Slack thread API (read), RocketShip Strategy KB (read), Salesforce ARR lookup (read), #pm-daily channel (write), Jira (write, stub creation only).
+- **Working:** In-scope, current thread, customer ID, Application ID, KB chunks, current confidence score. Held in working context only.
+- **External:** Slack thread API (read), RocketShip Strategy KB (read), Jira (write, stub creation only).
 
 ## Human-in-the-loop
 
-PM reviews any P0 with confidence < 70% before posting. Daily 8:55am: PM has a 5-min review window before the agent auto-posts to #pm-daily.
+PM reviews any P0 with confidence < 70% before posting. PM will review and approve any P0 escalations before it is posted to the structured insights and draft PRD.
 
 ## Success & failure
 
-- **Done when:** - Success: top-3 risk list posted to #pm-daily.
+- **Done when:** - Success: Draft PRD is created with PM approval.
 - Failure: > 2 tool errors in a run → log + abort.
 - Escalation: confidence < 70% on any P0 → hand to PM.
 - Timeout: 90s wall clock → abort with partial output.
-- **Fails safe when:** Agent can READ Slack #escalations + Strategy KB + Salesforce ARR. Agent can WRITE to #pm-daily and create Jira stubs. Agent CANNOT edit Salesforce records, edit Jira tickets after creation, or post outside #pm-daily.
+- **Fails safe when:** Agent can READ Slack #escalations + Strategy KB + JIRA tickets. Agent can WRITE to structured insights and Draft PRD. Agent CANNOT edit write or edit tickets, strategy documents, access user accounts/permissions, evaluation scores. 
