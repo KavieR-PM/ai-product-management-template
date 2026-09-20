@@ -24,16 +24,14 @@ New message in #escalations tagged P3 AND thread length >= 5 messages within 30 
 
 | Step | Action | Tool / model | Guardrail |
 |---|---|---|---|
-| 1 | Read the tickets (Jira + Support) and Slack threads and retrieve customer ID and Application ID  if mentioned. | APIs: | Agent can READ Slack #escalations + Strategy KB + JIRA tickets. Agent can WRITE to structured insights and Draft PRD. Agent CANNOT edit write or edit tickets, strategy documents, access user accounts/permissions, evaluation scores.  |
-| 2 | RAG retrieval over the RocketShip Strategy One-Pager (M3 KB), top-K = 6. | search_strategy(), read-only - retrieve and parse the strategy document that it queries against |  |
-| 3 | Score risk + alignment vs strategic pillars; emit P0-P3 with rationale. | read_tickets(), read-only - fetch tickets for correlation |  |
-| 4 | Create Structured insights (transcript quote) and Draft PRD cards (problem statement + evidence). | write_roadmap, write-only - commit decisions to a persistent backlog |  |
-| 5 | PM review based on confidence threshold. | Internal databases: |  |
-| 6 | _ | Juno Session & Request Store - Store transcript uploads, request state and tool trace logs |  |
-| 7 | _ | Insight Store - Persist all synthesized insights (seeded and refined) and their metadata |  |
-| 8 | _ | Tool trace log - Audit trail of every tool call, result, and guardrail check |  |
-| 9 | _ | Strategy Document Index - fast lookups without re-parsing every time |  |
-| 10 | _ | Evaluation and Metrics Store - Log weekly human evaluation scores and track guardrail health |  |
+| 1 | Read the tickets (Jira + Support) and Slack threads and retrieve customer ID and Application ID  if mentioned. | search_strategy(), read-only - retrieve and parse the strategy document that it queries against | Agent can READ Slack #escalations + Strategy KB + JIRA tickets. Agent can WRITE to structured insights and Draft PRD. Agent CANNOT edit write or edit tickets, strategy documents, access user accounts/permissions, evaluation scores.  |
+| 2 | RAG retrieval over the RocketShip Strategy One-Pager (M3 KB), top-K = 6. | read_tickets(), read-only - fetch tickets for correlation |  |
+| 3 | Score risk + alignment vs strategic pillars; emit P0-P3 with rationale. | write_roadmap, write-only - commit decisions to a persistent backlog |  |
+| 4 | Create Structured insights (transcript quote) and Draft PRD cards (problem statement + evidence). | Juno Session & Request Store - Store transcript uploads, request state and tool trace logs |  |
+| 5 | PM review based on confidence threshold. | Insight Store - Persist all synthesized insights (seeded and refined) and their metadata |  |
+| 6 | _ | Tool trace log - Audit trail of every tool call, result, and guardrail check |  |
+| 7 | _ | Strategy Document Index - fast lookups without re-parsing every time |  |
+| 8 | _ | Evaluation and Metrics Store - Log weekly human evaluation scores and track guardrail health |  |
 
 **Schemas**
 
