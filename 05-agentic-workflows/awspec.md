@@ -48,12 +48,12 @@ New message in #escalations tagged P3 AND thread length >= 5 messages within 30 
 
 ## Human-in-the-loop
 
-PM reviews any P0 with confidence < 70% before posting. PM will review and approve any P0 escalations before it is posted to the structured insights and draft PRD.
+PM reviews any escalations before posting to Strategic insights and draft PRD. PM will review and approve any P0 escalations before it is posted to insights and draft PRD.
 
 ## Success & failure
 
 - **Done when:** - Success: Draft PRD is created with PM approval.
 - Failure: > 2 tool errors in a run → log + abort.
-- Escalation: confidence < 70% on any P0 → hand to PM.
+- Escalation → hand to PM before writing to Structured insights and draft PRD
 - Timeout: 90s wall clock → abort with partial output.
 - **Fails safe when:** Agent can READ Slack #escalations + Strategy KB + JIRA tickets. Agent can WRITE to structured insights and Draft PRD. Agent CANNOT edit write or edit tickets, strategy documents, access user accounts/permissions, evaluation scores. 
