@@ -6,8 +6,8 @@
 
 >=80% thumbs-up; regenerate rate <=15%; abandon rate <=20% on non-trivial intents
 
-- Active: thumbs up/down on each Juno output; "regenerate" and "edit before send" buttons; free-text feedback when thumbs-down
-- Passive: dismiss/suppress, time-to-first-action, abandon rate (PM closes thread without acting)
+- Active: thumbs up/down on each Juno output; engagement patters (do users "regenerate" and "edit" committed insights?; free-text feedback when thumbs-down, sentiment in chat/Slack (unsolicited feedback, bug reports, praise)
+- Passive: dismiss/suppress, time-to-first-action, abandon rate (PM closes thread without acting), churn (do users stop using Juno after 1st week?)
 
 ## The stack
 
@@ -15,11 +15,12 @@
 |---|---|---|---|
 | Code-based | Automated checks · cadence: Every PR (CI gate) + nightly cron · owner: CI fails the PR. Eng owns format/citation. PM owns the accuracy bar. | - LLM-judge scores accuracy of top-3 (rubric-aligned) - Format check: valid markdown table with required columns - Citation check: each risk cites a message index that exists - Refusal check: contracts/legal language triggers refusal | >=90% golden-set accuracy; 100% format/citation/refusal pass |
 | LLM-as-judge | Automated assessment on the golden set | Silent wrong outputs at the long tail | >=90% golden-set accuracy; 100% format/citation/refusal pass |
-| Human | 06-evals/human-rubric.md · 2 graders + PM tiebreak per disagreement protocol · cadence: Run evals on 5–10 insights (or 1 full "request" = 3 insights) from the prior week's Juno runs. Rotate graders weekly to avoid drift. | - 50 P0 triage runs / week - Stratified across confidence buckets (high / mid / low) - 100% of hand-off cases included | >=4.0/5 mean across accuracy + safety; 0 critical safety fails |
+| Human | 06-evals/human-rubric.md · 2 graders + PM tiebreak per disagreement protocol · cadence: Weekly batch (Friday afternoon) | - Verification Enforcement: graders trace whether every committed insight has a source clause - Quote Accuracy: graders check whether quotes are verbatim, paraphrased, or fabricated - Strategic Alignment: graders score whether insights match the strategy doc's framing - Buildability: graders rate whether insights translate to actionable tickets | >=4.0/5 mean across accuracy + safety; 0 critical safety fails |
 
 ## Golden set
 
-- 200 anonymised P0 threads with PM-curated expected top-3 risks
+- write_roadmap refuses unverified insights 
+- sample 10 recent commits for quote accuracy 
 - Versioned in 06-evals/golden-set/
 - Refresh quarterly and after every major incident
 
@@ -27,14 +28,15 @@
 
 **Hard gates (auto-block):**
 
-- 0% PII leakage (auto-block)
-- 0 critical safety fails on the human-eval layer
-- Citation check fail => block
+- verification enforcement  is <4.0 avg (if unverified insights leak to roadmap, Juno is broken) 
+- guardrail audibility <4.0 avg  (if the trace is opaque, graders can't verify guardrails were fired) 
+- anti-pattern recall <4.0 avg (if anti patterns aren't caught, low-quality requests ship unfiltered. Core filter is broken)
 
 **Soft gates (PM sign-off):**
 
-- P99 latency >5s requires PM justification
-- Off-brand tone flags >2% require PM review (not auto-block)
+- source alignment is <3.5 avg (strategy matching is hard; weak matches are still usable)
+- priority accuracy <3.0 (calibrating the P-levels is domain specific. One PM's P1 is another's P2)
+- quote accuracy <3.5 (quotes are sensitive; paraphrasing erodes trust)
+- build ability <3.0 (rough insights can be refined by the PM)
 
 **User-feedback layer (online):** cadence Per request (real-time) + weekly aggregate review; owner PM reviews weekly; on-call PM triages >=2 thumbs-down on same intent within 24h.
-_____
