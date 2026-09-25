@@ -2,7 +2,7 @@
 
 > An AI Associate PM that turns escalations from tickets (Jira & support) & Slack into strategic insights and creation of draft PRD
 
-_Kavena Ramsoobhag · AI PM Cohort · May 2026_
+_Kavena Ramsoobhag · AI PM Cohort · September 2026
 
 Repo: https://github.com/KavieR-PM/ai-product-management-template.git
 
@@ -14,14 +14,14 @@ This repo is my final project for the AI Product Management Certification — **
 
 ### M1 · Prompting
 - **System prompt** — [`01-prompting/system-prompt.md`](01-prompting/system-prompt.md)
-- **Prototype** — https://claude.ai/artifact/M4iRgj17dm1UxMy1yik9fB
+- **Prototype** — [https://claude.ai/artifact/M4iRgj17dm1UxMy1yik9fB](https://claude.ai/artifact/M4iRgj17dm1UxMy1yik9fB)
 
 ### M2 · Strategy
 - **Decision matrix** — [`02-strategy/decision-matrix.md`](02-strategy/decision-matrix.md)
 - **AI Strategy one-pager** — [`02-strategy/strategy-one-pager.md`](02-strategy/strategy-one-pager.md)
 
 ### M3 · RAG / AI PRD
-- **AI PRD** — [`03-harness-prd/prd.md`](03-harness-prd/prd.md)
+- **AI PRD** — [`03-rag-prd/prd.md`](03-rag-prd/prd.md)
 
 ### M4 · AI-Native UX
 - **AI user flow** — [`04-ai-ux/user-flow.md`](04-ai-ux/user-flow.md)
@@ -74,9 +74,9 @@ This repo is my final project for the AI Product Management Certification — **
 
 ## Build Insights
 
-- **Friction point.** Retrieval quality was the bottleneck — chunking strategy mattered more than the model.
-- **Key learning.** Eval rubrics force the product decisions that PRDs let you hide.
-- **Aha moment.** The system prompt is the product — the UI is the wrapper.
+- **Friction point.** PM verification is too binary - it required a 100% match to the strategy which can lead to the system rejecting insights that could improve the product.
+- **Key learning.** Eval scores from any single layer of the Eval stack is incomplete. Utilizing the three layers: Component tests will indicate if the guardrails implemented are working; human eval (grader scores) will tell if the output quality is high; user feedback will tell if Juno is valuable to the users. 
+- **Aha moment.** The rubric doesn't define success - problem statement does. Define the problem first, then design the eval to prove you solved it
 
 ---
 
