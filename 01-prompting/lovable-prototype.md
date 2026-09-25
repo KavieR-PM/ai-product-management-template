@@ -6,7 +6,7 @@ https://claude.ai/artifact/M4iRgj17dm1UxMy1yik9fB
 
 ## What it demonstrates
 
-The one flow this prototype proves is that
+A working end-to-end pipeline that provides verified roadmap insights extracted from strategy, with priority levels and audit trails.
 
 ## Debrief
 
