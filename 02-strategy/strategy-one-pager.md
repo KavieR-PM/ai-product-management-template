@@ -1,7 +1,5 @@
 # AI Strategy One-Pager - Juno Automated Prioritization
 
-# AI Strategy One-Pager - Juno Automated Prioritization
-
 ## 1. Problem & Workflow
 
 The Problem: PMs spend 4–6 hours per quarter manually synthesizing strategy into roadmap priorities, resulting in misaligned roadmaps, missed opportunities, and duplicated discovery work across the org.
