@@ -42,7 +42,7 @@ This repo is my final project for the AI Product Management Certification — **
 ### Where Juno is today
 - M1–M6 specced and committed.
 - The prototype validates the M1 flow with the team.
-- Basic Juno pipeline: read strategy doc → extract insights via Claude → write to roadmap
+- Basic Juno pipeline: read escalations → RAG strategy → score risk+alignment → output risk list + draft PRD → PM approves"
 - User-facing UI for browsing insights, approving writes
 - Tool tracing/logging 
 - Initial anti-pattern detection logic
