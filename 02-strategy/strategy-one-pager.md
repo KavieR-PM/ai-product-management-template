@@ -1,41 +1,60 @@
 # AI Strategy One-Pager - Juno Automated Prioritization
 
+# AI Strategy One-Pager - Juno Automated Prioritization
+
 ## 1. Problem & Workflow
 
-The Problem: PMs spend 4–6 hours per quarter manually synthesizing strategy into roadmap priorities, resulting in misaligned roadmaps, missed opportunities, and duplicated discovery work across the org.
+The Problem: RocketShip PMs waste 2–3 hours per week wading through P0/P1 escalations across Slack (#escalations), Notion (Product workspace), and Jira (ROCKET project) to synthesize a ranked risk list. Result: priority mismatches, duplicated triage work, and slow response to customer-blocking issues.
 
-Prevention: Juno explicitly prevents unverified insights from reaching the roadmap. Every committed insight is traced back to a verbatim source clause in the strategy document, making decisions auditable and decisions reversible if strategy changes.
+Prevention: Juno explicitly prevents unverified and fabricated claims from the risk list. Every claim cites its Slack thread ID, Jira key, or Notion page. Ambiguous sources are flagged "NEEDS CLARIFICATION" instead of guessed.
 
 ## 2. Target Metrics
 
-Cycle time: Time from strategy review to prioritized roadmap drops from 4–6 hours to <1 hour per review cycle. Measurable in ≤ 30 days (first beta use case).
+Cycle time: Time from escalation spike to prioritized risk list drops from 2–3 hours to <15 minutes. Measurable in ≤ 30 days (first beta use case).
 
-Leadership proof: 1) 100% of committed insights are verifiable (zero unverified insights escape guardrails). 2) Zero instances of verification gate or permission tier enforcement failing. 3) User adoption ≥ 15% of eligible PMs in beta; PM re-run rate ≥ 30% (signal of trust)
+Leadership proof:
+100% of claims are sourced (zero fabricated customer names, ARR, or contractual terms)
+Zero instances of verification gate or citation enforcement failing
+PM adoption ≥ 20% in first week; daily active users ≥ 15% by week 4
 
 ## 3. Autonomy Level
 
-Choice: Copilot. Juno assists PMs by generating draft insights and surfacing priorities, but requires explicit human approval (modal + timestamp) before any write to the roadmap. The PM remains the decision-maker; Juno is the synthesis engine.
+Choice: Copilot. Juno synthesizes and ranks escalations, but requires explicit PM approval before publishing the risk list. The PM remains the decision-maker; Juno is the synthesis engine.
 
-Explicitly avoiding: Agent (autonomous roadmap updates without approval—unacceptable for strategic decisions) or Assist (read-only synthesis, no decision power—misses the point).
+Explicitly avoiding:
+Agent (autonomous escalation triage without approval—unacceptable for customer-blocking decisions)
+Assist (read-only synthesis, no priority ranking—misses the point)
 
 ## 4. Data & Model Approach
 
-Approach: Ground (RAG). Juno reads the PM's strategy document as the only source of truth, extracts insights via Claude, and verifies every insight against verbatim clauses in the source before writing. No external data; no hallucination tolerance.
+Approach: Ground (RAG). Juno reads Slack threads (#escalations), Notion pages (Product workspace), and Jira tickets (ROCKET project) as the sources of truth. Every claim is traced back to its original source. No external data; no fabrication tolerance.
 
-Explicitly avoiding: Fine-tuning (not cost-effective for variable strategy docs across customers) and Buy-only models (no grounding means no auditability, and verification gate becomes impossible to enforce).
+Explicitly avoiding:
+Fine-tuning (not cost-effective for variable escalation patterns)
+Buy-only LLM (no grounding means no source citation, verification gate becomes impossible to enforce)
 
 ## 5. Risks & Mitigations
 
-Risk: Unverified or fabricated insights reach the roadmap, eroding trust in strategic decisions and making them unmake-able. One hallucinated insight becomes a shipped commitment that derails the quarter.
+Risk: Fabricated or unverified claims reach the risk list (e.g., invented customer name, ARR, or contractual term), eroding trust in escalation triage and causing the PM to act on false information.
 
-Mitigation: Immutable audit trail with code-enforced verification gate. Every write_roadmap call requires: 1) human approval via timestamp modal, 2) verification check (100% verbatim match or marked unverified), 3) immutable trace log. Any missing approval/verification/trace blocks release entirely. Zero exceptions.
+Mitigation: Immutable audit trail with code-enforced citation gate. Every claim in the output requires:
+- Source citation (Slack ID, Jira key, or Notion page link)
+- Verification check (exact quote from source or marked "NEEDS CLARIFICATION")
+- Immutable trace log
+Any missing source or fabricated claim blocks publication entirely. Zero exceptions.
 
 ## 6. V1 Scope
 
-In: Read strategy doc → Extract candidate insights via Claude → Verify each against source → Write to roadmap with explicit PM approval. Full audit trail logged. Grader evaluation on 7 dimensions (Verification Enforcement, Quote Accuracy, Strategic Alignment, etc.).
+In:
+- Read Slack #escalations threads, Notion Product workspace pages, Jira ROCKET tickets
+- Synthesize P0/P1 escalations into a ranked risk list (max 5 rows)
+- Cite every claim with Slack ID, Jira key, or Notion link
+- Suggest action for each risk
+- Full audit trail logged
+- PM approval required before publishing
 
 Out:
-
-Does NOT auto-update roadmap without PM approval.
-Does NOT generate insights from external sources (Slack, competitor analysis, etc.—only the PM-provided strategy doc).
-Does NOT handle strategy docs > 50 pages or < 500 words (in scope requires enough context).
+- Does NOT publish risk list without PM approval
+- Does NOT generate claims from external sources (web search, competitor research, etc.—only Slack, Notion, Jira)
+- Does NOT invent customer names, ARR, or contractual terms (refuse and mark "NEEDS CLARIFICATION")
+- Does NOT handle requests involving contracts, legal, or regulators (hand off to human PM)
